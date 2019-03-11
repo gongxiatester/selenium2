@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+ <project name="myweb"  default="fabu" basedir="."> 
+<property name="classes" value="build/classes"/>   
+  <property name="build" value="build"/>    
+ <property name="lib" value="WebContent/WEB-INF/lib"/> 
+ <property name="webserver" value="C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps"/> 
+    <!-- 删除build路径-->  
+ 	<!--
+ <target name="clean">     
+   <delete dir="build"/>    
+ </target>
+ -->
+    <!-- 建立build/classes路径，并编译class文件到build/classes路径下-->    
+ <target name="compile" depends="">      
+  <mkdir dir="${classes}"/>
+       <javac srcdir="src/myweb" destdir="${classes}" includeantruntime="on"/>     
+</target>
+ 	<!--
+ 	<target name="run" depends="compile" description="运行">
+ 		<java classname="HelloWorld">
+ 	<classpath>
+ 		<pathelement path="${classes}"/>
+ 	</classpath>
+ 	</java>
+ 	</target>-->
+    <!-- 打war包-->   
+  <target name="war" depends="compile"> 
+<war destfile="${build}/myweb.war" webxml="target/WebContent/WEB-INF/web.xml">        
+    <!-- 拷贝WebRoot下除了WEB-INF和META-INF的两个文件夹-->   
+  <fileset dir="WebContent" includes="**/*.jsp"/>
+           <!-- 拷贝lib目录下的jar包-->         
+   <lib dir="${lib}"/>         
+   <!-- 拷贝build/classes下的class文件-->        
+    <classes dir="${classes}"/>     
+   </war>    
+ </target>
+ 	<!--复制生成的war文件至tomcat下-->
+ 	<target name="fabu" depends="war" description="发布">
+ 	   <copy file="${build}/myweb.war" todir="${webserver}" overwrite="true">
+ 	   </copy>
+ 	</target>
+ </project>
